@@ -61,8 +61,8 @@ endereco1 = Endereco('Rua Padre Vicente de Araujo', '531', 'Casa', 'JD. Quisisan
 endereco2 = Endereco('Rua Padre Vicente', '53', 'Casa', 'JD. Quisisana', 'São Paulo','SP', '08150580')
 cliente1 = Cliente('Guilherme', '11932196473', endereco1)
 cliente2 = Cliente('Clara', '11932196473', endereco2)
-pedido1 = Pedido(cliente1, 5, 6, 'Hellow World', 'Branca', 'Preta')
-pedido2 = Pedido(cliente2, 7, 8, 'Hellow World', 'Branca', 'Preta')
+pedido1 = Pedido(cliente1, 5, 6, 'Hello World', 'Branca', 'Preta')
+pedido2 = Pedido(cliente2, 7, 8, 'Hello World', 'Branca', 'Preta')
 print(pedido1.get_valor_total())
 print(pedido2.get_valor_total())
 historico = Historico()
@@ -78,19 +78,38 @@ lista_de_clientes = []
 
 while True:
     print('1 - Cadastrar cliente')
-    print('2 - Cadastrar pedido')
+    print('2 - Adicionar pedido')
     print('3 - Ver o valor total de um pedido')
     print('4 - Calcular faturamento de todos pedidos')
+    print('5 - Finalizar programa')
 
     opcao = int(input('Escolha a opção que deseja:'))
 
     if opcao == 1:
-        nome = input('Digite o nome do cliente: ')
-        telefone = int(input('Digite o telefone do cliente: '))
+        while True:
+            nome = input('Digite o nome do cliente: ')
+            try:
+                telefone = int(input('Digite o telefone do cliente: '))
+                if telefone <= 0:
+                    raise ValueError
+                if telefone >= 0:
+                    break
+            except Exception:
+                print('Algum erro ocorreu')
         rua = input('Qual a rua do cliente: ')
-        numero = int(input('Digite o numero da residência: '))
+        try:
+            numero = int(input('Digite o numero da residência: '))
+            if numero <= 0:
+                raise ValueError
+        except Exception:
+            print('Algum erro ocorreu')
         complemento = input('Complemento: ')
-        cep = int(input('Digite o cep: '))
+        try:
+            cep = int(input('Digite o cep: '))
+            if cep <= 0:
+                raise ValueError
+        except Exception:
+            print('Algum erro ocorreu')
         bairro = input('Bairro: ')
         cidade = input('Cidade: ')
         uf = input('Estado: ')
@@ -138,11 +157,17 @@ while True:
             pedido_selecionado = historico._Historico__pedidos[escolha]
             valor_total_pedido = pedido_selecionado.get_valor_total()
             print(f'Valor total do pedido para cliente {pedido_selecionado.cliente.nome}: R${valor_total_pedido:.2f}')
-    
+
     elif opcao == 4:
         if not historico._Historico__pedidos:
             print("Nenhum pedido cadastrado. Por favor, cadastre um pedido primeiro.")
             continue
-
         faturamento_total = historico.calcular_faturamento()
         print(f'Faturamento total de todos os pedidos: R${faturamento_total:.2f}')
+
+    elif opcao == 5:
+        print('Programa finalizado.')
+        break
+
+    else:
+        print('Erro. opção incorreta.')
