@@ -56,44 +56,64 @@ class Historico:
             faturamento_total += pedido.get_valor_total()
         return faturamento_total
 
-
-endereco1 = Endereco('Rua Padre Vicente de Araujo', '531', 'Casa', 'JD. Quisisana', 'São Paulo','SP', '08150580')
-endereco2 = Endereco('Rua Padre Vicente', '53', 'Casa', 'JD. Quisisana', 'São Paulo','SP', '08150580')
-cliente1 = Cliente('Guilherme', '11932196473', endereco1)
-cliente2 = Cliente('Clara', '11932196473', endereco2)
-pedido1 = Pedido(cliente1, 5, 6, 'Hellow World', 'Branca', 'Preta')
-pedido2 = Pedido(cliente2, 7, 8, 'Hellow World', 'Branca', 'Preta')
-print(pedido1.get_valor_total())
-print(pedido2.get_valor_total())
 historico = Historico()
-historico.inserir_pedido(pedido1)
-historico.inserir_pedido(pedido2)
-
-faturamento = historico.calcular_faturamento()
-print(f"Faturamento total: R${faturamento:.2f}")
-
 lista_de_clientes = []
-
-
+cores_placa = ['branca', 'cinza']
+cores_frase = ['azul', 'vermelha', 'amarelo', 'preto', 'verde']
+estados = [
+    "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA",
+    "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
+    "RS", "RO", "RR", "SC", "SP", "SE", "TO"
+]
 
 while True:
     print('1 - Cadastrar cliente')
     print('2 - Cadastrar pedido')
     print('3 - Ver o valor total de um pedido')
     print('4 - Calcular faturamento de todos pedidos')
+    print('5 - Ver todos os clientes cadastrados')
+    print('6 - ver todos os pedidos')
+    print('7 - Excluir um cliente')
+    print('8 - Excluir um pedido')
+    print('0 - Sair do programa')
 
-    opcao = int(input('Escolha a opção que deseja:'))
+    try:
+        opcao = int(input('Escolha a opção que deseja:'))
+    except ValueError:
+        print('Opção inválida. Por favor, digite um número válido.')
+        continue
 
     if opcao == 1:
         nome = input('Digite o nome do cliente: ')
-        telefone = int(input('Digite o telefone do cliente: '))
+        while True:
+            telefone = input('Digite o telefone do cliente (11 dígitos): ')
+            if len(telefone) == 11 and telefone.isdigit():
+                break
+            else:
+                print('Telefone inválido. Certifique-se de que possui exatamente 11 dígitos e contém apenas números.')
+
         rua = input('Qual a rua do cliente: ')
-        numero = int(input('Digite o numero da residência: '))
+        while True:
+            numero = input('Digite o numero da residência: ')
+            if numero.isdigit():
+                break
+            else:
+                print('Número inválido. Certifique-se de que contenha apenas números')
         complemento = input('Complemento: ')
-        cep = int(input('Digite o cep: '))
+        while True:
+            cep = input('Digite o cep: ')
+            if len(cep) == 8 and cep.isdigit():
+                break
+            else:
+                print('Cep inválido. Certifique-se de que possui exatamente 8 dígitos e contém apenas números.')
         bairro = input('Bairro: ')
         cidade = input('Cidade: ')
-        uf = input('Estado: ')
+        while True:
+            uf = input('Estado (sigla): ')
+            if uf.upper() in estados:
+                break
+            else:
+                print('UF inválida. Por favor, digite a sigla do estado brasileiro.')
         
         endereco = Endereco(rua, numero, complemento, bairro, cidade, uf, cep)
         cliente = Cliente(nome, telefone, endereco)
@@ -113,13 +133,35 @@ while True:
 
         if 0 <= escolha < len(lista_de_clientes):
             cliente_selecionado = lista_de_clientes[escolha]
-            altura = float(input("Digite a altura: "))
-            largura = float(input("Digite a largura: "))
+            while True:
+                try:
+                    altura = float(input("Digite a altura: "))
+                    if altura > 0:
+                        break
+                except ValueError:
+                    print("Altura inválida. Digite um número válido.")
+            while True:
+                try:
+                    largura = float(input("Digite a largura: "))
+                    if largura > 0:
+                        break
+                except ValueError:
+                    print("Largura inválida. Digite um número válido.")
             frase = input("Digite a frase: ")
-            cor_placa = input("Digite a cor da placa: ")
-            cor_letra = input("Digite a cor da letra: ")
+            while True:
+                cor_placa = input("Digite a cor da placa (branca ou cinza): ").lower()
+                if cor_placa in cores_placa:
+                    break
+                else:
+                    print("Cor da placa inválida. Digite 'branca' ou 'cinza'.")
+            while True:
+                cor_frase = input("Digite a cor da letra (azul, vermelha, amarelo, preto ou verde): ").lower()
+                if cor_frase in cores_frase:
+                    break
+                else:
+                     print("Cor da letra inválida. Escolha entre azul, vermelha, amarelo, preto ou verde.")
             valor_total = 0
-            pedido = Pedido(cliente_selecionado, altura, largura, frase, cor_placa, cor_letra, valor_total)
+            pedido = Pedido(cliente_selecionado, altura, largura, frase, cor_placa, cor_frase, valor_total)
             historico.inserir_pedido(pedido)
             print('Pedido cadastrado com sucesso')
 
@@ -146,3 +188,71 @@ while True:
 
         faturamento_total = historico.calcular_faturamento()
         print(f'Faturamento total de todos os pedidos: R${faturamento_total:.2f}')
+
+    elif opcao == 5:
+        if not lista_de_clientes:
+            print("Nenhum cliente cadastrado ainda.")
+        else:
+            print("Clientes Cadastrados:")
+        for idx, cliente in enumerate(lista_de_clientes, start=1):
+            print(f"{idx}. Nome: {cliente.nome}, Telefone: {cliente.telefone}")
+
+    elif opcao == 6:
+        if not historico._Historico__pedidos:
+            print("Nenhum pedido cadastrado ainda.")
+        else:
+            print("Pedidos Cadastrados:")
+        for idx, pedido in enumerate(historico._Historico__pedidos, start=1):
+            print(f"{idx}. Cliente: {pedido.cliente.nome}, Altura: {pedido.altura}, Largura: {pedido.largura}, Cor Placa: {pedido.cor_placa}, Cor Letra: {pedido.cor_letra}")
+
+    elif opcao == 7:
+        if not lista_de_clientes:
+            print("Nenhum cliente cadastrado. Não há clientes para excluir.")
+        else:
+            print("Clientes Cadastrados:")
+            for idx, cliente in enumerate(lista_de_clientes, start=1):
+                print(f"{idx}. Nome: {cliente.nome}")
+
+            escolha = int(input("Selecione o número do cliente que deseja excluir: ")) - 1
+
+            if 0 <= escolha < len(lista_de_clientes):
+                cliente_a_excluir = lista_de_clientes[escolha]
+                num_pedidos_cliente = sum(1 for pedido in historico._Historico__pedidos if pedido.cliente == cliente_a_excluir)
+
+                print(f'O cliente {cliente_a_excluir.nome} possui {num_pedidos_cliente} pedidos.')
+
+                while True:
+                    confirmacao = input(f'Tem certeza que deseja excluir o cliente {cliente_a_excluir.nome} que tem {num_pedidos_cliente} pedidos? (Sim/Não/S/N): ').lower()
+                    if confirmacao in ['sim', 'não', 's', 'n']:
+                        break
+                    else:
+                        print('Resposta inválida. Digite "Sim", "Não", "S" ou "N".')
+
+                if confirmacao in ['sim', 's']:
+                    lista_de_clientes.pop(escolha)
+                    print(f'Cliente {cliente_a_excluir.nome} excluído com sucesso.')
+
+                    historico._Historico__pedidos = [pedido for pedido in historico._Historico__pedidos if pedido.cliente != cliente_a_excluir]
+                    print(f'Todos os pedidos do cliente {cliente_a_excluir.nome} também foram excluídos.')
+                else:
+                    print('Exclusão cancelada.')
+
+    elif opcao == 8:
+        if not historico._Historico__pedidos:
+            print("Nenhum pedido cadastrado. Não há pedidos para excluir.")
+        else:
+            print("Pedidos Cadastrados:")
+            for idx, pedido in enumerate(historico._Historico__pedidos, start=1):
+                print(f"{idx}. Cliente: {pedido.cliente.nome}, Altura: {pedido.altura}, Largura: {pedido.largura}, Cor Placa: {pedido.cor_placa}, Cor Letra: {pedido.cor_letra}")
+
+            escolha = int(input("Selecione o número do pedido que deseja excluir: ")) - 1
+            if 0 <= escolha < len(historico._Historico__pedidos):
+                pedido_a_excluir = historico._Historico__pedidos.pop(escolha)
+                print('Pedido excluído com sucesso.')
+
+    elif opcao == 0:
+        print('Programa Finalizado !')
+        break
+
+    else:
+        print('Opção inválida tente novamente')
