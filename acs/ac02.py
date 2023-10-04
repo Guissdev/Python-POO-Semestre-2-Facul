@@ -1,10 +1,4 @@
-# Envolvidos
-'''
-Guilherme da Silva Santos (RA: 2300162)
-Walace Santos Araújo      (RA: 2300316)
-Isaque Aleixo Amancio     (RA: 2300405)
-'''
-
+# Atividade continua para a nota 2 
 
 def contar_letras_sem_espacos(string):
     contador = 0
